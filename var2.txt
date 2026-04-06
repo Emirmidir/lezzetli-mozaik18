@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Explorer Grid Template</title>
+
+<!-- FONT -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900&display=swap" rel="stylesheet">
+
+<style>
+/* ===== RESET ===== */
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  font-family: "Inter", Helvetica, Roboto;
+  color: white;
+  background-color: #000;
+}
+
+/* ===== BACKGROUND ===== */
+body {
+  background-image: url("https://www.iclarified.com/images/news/86400/417638/417638-1280.avif");
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+}
+
+/* ===== PANEL STYLE ===== */
+.panel {
+  background: rgba(0,0,0,0.75);
+  border-radius: 11px;
+  margin: 1rem;
+  padding: 1rem;
+}
+
+/* ===== HEADER ===== */
+header {
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+/* ===== DIRECTORY BAR ===== */
+.directory {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  flex-wrap: nowrap;
+}
+
+.dir-item {
+  display: inline-block;
+  color: #00f7ff;
+  cursor: pointer;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.dir-item:hover {
+  transform: translate(3px, -3px);
+  transition: transform 0.2s;
+}
+
+/* ===== MAIN AREA ===== */
+.main {
+  display: flex;
+  gap: 1rem;
+  margin: 0 1rem;
+  flex-wrap: wrap;
+}
+
+/* ===== CONTENT PANEL WITH GRID ===== */
+.content {
+  flex: 1 1 60%;
+  min-width: 300px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-auto-rows: minmax(150px, auto);
+  gap: 1rem;
+}
+
+/* ===== BLOCKS INSIDE CONTENT ===== */
+.content-block {
+  background: rgba(20,20,20,0.85);
+  border-radius: 11px;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+
+/* ===== RIGHT PANEL ===== */
+.right-panel {
+  flex: 1 1 25%;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* ===== BUTTONS ===== */
+button {
+  background: #111;
+  color: white;
+  border: 1px solid #333;
+  padding: 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+button:hover {
+  background: #222;
+}
+
+/* ===== BOTTOM BAR ===== */
+.bottom-bar {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin: 1rem;
+}
+
+/* ===== IFRAME, IMAGES, EMBEDS ===== */
+iframe, img, object, embed, video {
+  border-radius: 11px;
+  border: 0;
+  width: 100%;
+  height: 200px;
+  max-height: 300px;
+  background: #000;
+  object-fit: contain;
+}
+
+/* ===== SCROLLBAR STYLE ===== */
+::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 10px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  .main {
+    flex-direction: column;
+  }
+  .content, .right-panel {
+    flex: 1 1 100%;
+    min-width: unset;
+  }
+  iframe, img, object, embed, video {
+    height: 250px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ===== HEADER ===== -->
+<header class="panel" id="current-path">
+  /lezzetli-mozaik18/
+</header>
+
+<!-- ===== DIRECTORY ===== -->
+<div class="panel directory" id="directory-container">
+  <span class="dir-item">ana-menu/</span>
+  <span class="dir-item">images/</span>
+  <span class="dir-item">about.html</span>
+</div>
+
+<!-- ===== MAIN AREA ===== -->
+<div class="main">
+
+  <!-- ===== CONTENT GRID ===== -->
+  <div class="panel content" id="content-viewer">
+    <!-- Example dynamic blocks -->
+    <div class="content-block">
+      <p>Embedded page</p>
+      <iframe src=""></iframe>
+    </div>
+
+    <div class="content-block">
+      <p>Image</p>
+      <img src="https://via.placeholder.com/250x150" alt="Example">
+    </div>
+
+    <div class="content-block">
+      <p>PDF example</p>
+      <iframe src=""></iframe>
+    </div>
+
+    <div class="content-block">
+      <p>Button inside block</p>
+      <button>Click Me</button>
+    </div>
+  </div>
+
+  <!-- ===== RIGHT PANEL ===== -->
+  <div class="panel right-panel" id="actions-panel">
+    <!-- You can create dynamic elements here via JS -->
+  </div>
+
+</div>
+
+<!-- ===== BOTTOM BAR ===== -->
+<div class="panel bottom-bar" id="bottom-actions">
+  <button>New</button>
+  <button>Upload</button>
+  <button>Settings</button>
+</div>
+
+<!-- ===== SCRIPT ===== -->
+<script>
+// Example: dynamically adding content blocks
+const contentViewer = document.getElementById("content-viewer");
+
+for (let i = 1; i <= 3; i++) {
+  const block = document.createElement("div");
+  block.className = "content-block";
+  block.innerHTML = `<p>Dynamic Block ${i}</p><iframe src=""></iframe>`;
+  contentViewer.appendChild(block);
+}
+
+// Example directory interaction
+const files = ["doc.pdf", "video.mp4", "page.html"];
+const dirContainer = document.getElementById("directory-container");
+files.forEach(f => {
+  const el = document.createElement("span");
+  el.className = "dir-item";
+  el.textContent = f;
+  el.onclick = () => {
+    document.getElementById("current-path").textContent = "/" + f;
+    // dynamic content loading logic here
+  };
+  dirContainer.appendChild(el);
+});
+</script>
+
+</body>
+</html>
