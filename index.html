@@ -220,32 +220,5 @@ iframe, img, object, embed, video {
   <a href="https://emirmidir.github.io/lezzetli-mozaik18/settings.html">Settings</a>
 </div>
 
-<!-- ===== SCRIPT ===== -->
-<script>
-// Example: dynamically adding content blocks
-const contentViewer = document.getElementById("content-viewer");
-
-for (let i = 1; i <= 3; i++) {
-  const block = document.createElement("div");
-  block.className = "content-block";
-  block.innerHTML = `<p>Dynamic Block ${i}</p><iframe src=""></iframe>`;
-  contentViewer.appendChild(block);
-}
-
-// Example directory interaction
-const files = ["doc.pdf", "video.mp4", "page.html"];
-const dirContainer = document.getElementById("directory-container");
-files.forEach(f => {
-  const el = document.createElement("span");
-  el.className = "dir-item";
-  el.textContent = f;
-  el.onclick = () => {
-    document.getElementById("current-path").textContent = "/" + f;
-    // dynamic content loading logic here
-  };
-  dirContainer.appendChild(el);
-});
-</script>
-
 </body>
 </html>
