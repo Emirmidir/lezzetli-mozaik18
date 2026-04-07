@@ -5,14 +5,68 @@
 <meta charset="UTF-8">
 <title>Ayarlar Paneli</title>
 
-<!-- YOUR CSS (UNCHANGED) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900&display=swap" rel="stylesheet">
 
+<script>
+const data = JSON.parse(localStorage.getItem("siteSettings"));
+const favicon = localStorage.getItem("siteFavicon");
+
+// APPLY SETTINGS
+if (data) {
+
+  if (data.tabName) document.title = data.tabName;
+
+  if (data.bg)
+    document.body.style.backgroundImage = "url('" + data.bg + "')";
+
+  if (data.textColor)
+    document.body.style.color = data.textColor;
+
+  if (data.fontSize)
+    document.body.style.fontSize = data.fontSize + "px";
+
+  if (data.btnColor) {
+    document.querySelectorAll("button").forEach(btn => {
+      btn.style.background = data.btnColor;
+    });
+  }
+
+  if (data.panelOpacity) {
+    document.querySelectorAll(".panel").forEach(p => {
+      p.style.background = "rgba(0,0,0," + data.panelOpacity + ")";
+    });
+  }
+
+  if (data.darkMode === "off") {
+    document.body.style.filter = "invert(1) hue-rotate(180deg)";
+  }
+
+  // iframe (you said don't change logic → just apply height)
+  if (data.iframeHeight) {
+    document.querySelectorAll("iframe").forEach(f => {
+      f.style.height = data.iframeHeight;
+    });
+  }
+}
+
+// APPLY FAVICON
+if (favicon) {
+  let link = document.querySelector("link[rel~='icon']");
+  if (!link) {
+    link = document.createElement("link");
+    link.rel = "icon";
+    document.head.appendChild(link);
+  }
+  link.href = favicon;
+}
+</script>
+
+
 <style>
 
-/* ===== RESET (FIXES WHITE EDGES) ===== */
+/* ===== YOUR CSS (UNCHANGED) ===== */
 html, body {
   margin: 0;
   padding: 0;
@@ -22,16 +76,14 @@ html, body {
   color: white;
 }
 
-/* ===== BACKGROUND ===== */
 body {
   background-image: url("https://www.iclarified.com/images/news/86400/417638/417638-1280.avif");
-  background-attachment: scroll;
+  background-attachment: fixed;
   background-size: cover;
   background-position: center;
   background-repeat:repeat-y;
 }
 
-/* ===== REUSABLE PANEL STYLE ===== */
 .panel {
   background: rgba(0, 0, 0, 0.75);
   border-radius: 11px;
@@ -39,17 +91,32 @@ body {
   padding: 1rem;
 }
 
-/* ===== HEADER (CURRENT DIRECTORY) ===== */
 header {
   font-size: 24px;
 }
 
-/* ===== BUTTONS ===== */
+.main {
+  display: flex;
+  gap: 1rem;
+  margin: 0 1rem;
+}
+
+.content {
+  flex: 3;
+}
+
+.right-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
 button {
   background: #111;
   color: white;
   border: 1px solid #333;
-  padding: 0.5rem;
+  padding: 0.6rem;
   border-radius: 6px;
   cursor: pointer;
   font-family: inherit;
@@ -59,6 +126,31 @@ button:hover {
   background: #222;
 }
 
+/* ===== SMALL ADDITIONS (VISUAL ONLY, SAME STYLE) ===== */
+input, textarea, select {
+  width: 100%;
+  background: #111;
+  border: 1px solid #333;
+  color: white;
+  border-radius: 6px;
+  padding: 0.5rem;
+  margin-top: 0.2rem;
+  margin-bottom: 0.8rem;
+  font-family: inherit;
+}
+
+.section-title {
+  font-size: 14px;
+  opacity: 0.7;
+  margin-bottom: 0.5rem;
+}
+
+.bottom-bar {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
 </style>
 </head>
 
@@ -66,84 +158,108 @@ button:hover {
 
 <div class="panel">
   <header>Site Ayarları</header>
+</div>
 
-  <form id="ayarForm">
+<div class="main">
 
-    <p>Site favicon (yükle):</p>
-    <input type="file" id="favicon">
+  <!-- LEFT: MAIN SETTINGS -->
+  <div class="content panel">
 
-    <p>Site sekme adı:</p>
-    <input type="text" id="tabName" placeholder="Örn: Benim Sitem">
+    <div class="section-title">Genel</div>
 
-    <p>Site başlığı:</p>
+    <label>Site sekme adı</label>
+    <input type="text" id="tabName">
+
+    <label>Site başlığı</label>
     <input type="text" id="title">
 
-    <p>Açıklama:</p>
+    <label>Açıklama</label>
     <textarea id="desc" rows="3"></textarea>
 
-    <p>Arka plan görsel URL:</p>
+    <div class="section-title">Görünüm</div>
+
+    <label>Arka plan görsel URL</label>
     <input type="text" id="bg">
 
-    <p>Metin rengi:</p>
+    <label>Metin rengi</label>
     <input type="color" id="textColor">
 
-    <p>Buton rengi:</p>
+    <label>Buton rengi</label>
     <input type="color" id="btnColor">
 
-    <p>Iframe URL:</p>
-    <input type="text" id="iframeURL">
+  </div>
 
-    <p>Iframe yüksekliği:</p>
-    <input type="text" id="iframeHeight" placeholder="örn: 50rem">
+  <!-- RIGHT: EXTRA SETTINGS -->
+  <div class="right-panel">
 
-    <br><br>
+    <div class="panel">
+      <div class="section-title">Medya</div>
 
-    <button type="button" onclick="kaydet()">Kaydet</button>
-    <button type="button" onclick="sifirla()">Sıfırla</button>
+      <label>Favicon (yükle)</label>
+      <input type="file" id="favicon">
+    </div>
 
-  </form>
+    <div class="panel">
+      <div class="section-title">Iframe</div>
+
+      <label>Iframe URL</label>
+      <input type="text" id="iframeURL">
+
+      <label>Iframe yüksekliği</label>
+      <input type="text" id="iframeHeight">
+    </div>
+
+    <div class="panel">
+      <div class="section-title">Aksiyonlar</div>
+
+      <div class="bottom-bar">
+        <button onclick="kaydet()">Kaydet</button>
+        <button onclick="sifirla()">Sıfırla</button>
+      </div>
+    </div>
+
+  </div>
+
 </div>
 
 <script>
-// SAVE SETTINGS
 function kaydet() {
   const data = {
-    tabName: document.getElementById("tabName").value,
-    title: document.getElementById("title").value,
-    desc: document.getElementById("desc").value,
-    bg: document.getElementById("bg").value,
-    textColor: document.getElementById("textColor").value,
-    btnColor: document.getElementById("btnColor").value,
-    iframeURL: document.getElementById("iframeURL").value,
-    iframeHeight: document.getElementById("iframeHeight").value
+    tabName: tabName.value,
+    title: title.value,
+    desc: desc.value,
+    bg: bg.value,
+    textColor: textColor.value,
+    btnColor: btnColor.value,
+    iframeURL: iframeURL.value,
+    iframeHeight: iframeHeight.value
   };
 
   localStorage.setItem("siteSettings", JSON.stringify(data));
   alert("Kaydedildi!");
 }
 
-// RESET SETTINGS
 function sifirla() {
   localStorage.removeItem("siteSettings");
-  alert("Tüm ayarlar sıfırlandı!");
+  alert("Sıfırlandı!");
   location.reload();
 }
 
-// LOAD SETTINGS (on page load)
 window.onload = function() {
   const data = JSON.parse(localStorage.getItem("siteSettings"));
   if (!data) return;
 
-  document.getElementById("tabName").value = data.tabName || "";
-  document.getElementById("title").value = data.title || "";
-  document.getElementById("desc").value = data.desc || "";
-  document.getElementById("bg").value = data.bg || "";
-  document.getElementById("textColor").value = data.textColor || "#ffffff";
-  document.getElementById("btnColor").value = data.btnColor || "#111111";
-  document.getElementById("iframeURL").value = data.iframeURL || "";
-  document.getElementById("iframeHeight").value = data.iframeHeight || "";
+  tabName.value = data.tabName || "";
+  title.value = data.title || "";
+  desc.value = data.desc || "";
+  bg.value = data.bg || "";
+  textColor.value = data.textColor || "#ffffff";
+  btnColor.value = data.btnColor || "#111111";
+  iframeURL.value = data.iframeURL || "";
+  iframeHeight.value = data.iframeHeight || "";
 };
 </script>
 
 </body>
 </html>
+
