@@ -214,6 +214,21 @@ iframe, img, object, embed, video {
 
 </div>
 
+  <script>
+const data = JSON.parse(localStorage.getItem("siteSettings"));
+if (data) {
+  if (data.tabName) document.title = data.tabName;
+  if (data.bg) document.body.style.backgroundImage = "url('" + data.bg + "')";
+  if (data.textColor) document.body.style.color = data.textColor;
+
+  if (data.btnColor) {
+    document.querySelectorAll("button").forEach(btn => {
+      btn.style.background = data.btnColor;
+    });
+  }
+}
+</script>
+
 <!-- ===== BOTTOM BAR ===== -->
 <div class="panel bottom-bar" id="bottom-actions">
   <a href="https://emirmidir.github.io/lezzetli-mozaik18/index.html">Anasayfa</a>
