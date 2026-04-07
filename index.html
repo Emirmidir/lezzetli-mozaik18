@@ -4,6 +4,61 @@
 <meta charset="UTF-8">
 <title>Explorer Grid Template</title>
 
+<script>
+const data = JSON.parse(localStorage.getItem("siteSettings"));
+const favicon = localStorage.getItem("siteFavicon");
+
+// APPLY SETTINGS
+if (data) {
+
+  if (data.tabName) document.title = data.tabName;
+
+  if (data.bg)
+    document.body.style.backgroundImage = "url('" + data.bg + "')";
+
+  if (data.textColor)
+    document.body.style.color = data.textColor;
+
+  if (data.fontSize)
+    document.body.style.fontSize = data.fontSize + "px";
+
+  if (data.btnColor) {
+    document.querySelectorAll("button").forEach(btn => {
+      btn.style.background = data.btnColor;
+    });
+  }
+
+  if (data.panelOpacity) {
+    document.querySelectorAll(".panel").forEach(p => {
+      p.style.background = "rgba(0,0,0," + data.panelOpacity + ")";
+    });
+  }
+
+  if (data.darkMode === "off") {
+    document.body.style.filter = "invert(1) hue-rotate(180deg)";
+  }
+
+  // iframe (you said don't change logic → just apply height)
+  if (data.iframeHeight) {
+    document.querySelectorAll("iframe").forEach(f => {
+      f.style.height = data.iframeHeight;
+    });
+  }
+}
+
+// APPLY FAVICON
+if (favicon) {
+  let link = document.querySelector("link[rel~='icon']");
+  if (!link) {
+    link = document.createElement("link");
+    link.rel = "icon";
+    document.head.appendChild(link);
+  }
+  link.href = favicon;
+}
+</script>
+
+
 <!-- FONT -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
